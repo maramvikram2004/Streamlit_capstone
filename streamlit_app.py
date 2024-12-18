@@ -15,7 +15,7 @@ st.write(
 # Load Excel dataset
 @st.cache_data
 def load_data():
-    file_path = "chandigarh-Sheet1(2).csv"  # Replace with your CSV file path
+    file_path = "chandigarh_test.csv"  # Replace with your CSV file path
     return pd.read_csv(file_path)
 
 df = load_data()
