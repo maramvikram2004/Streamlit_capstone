@@ -1,57 +1,49 @@
-import pandas as pd
 import streamlit as st
-import altair as alt
+import pandas as pd
 
-# Streamlit page configuration
-st.set_page_config(page_title="Urban Metro Station Site Predictor", page_icon="🚇")
-st.title("Urban Metro Station Site Predictor")
+# Title of the Streamlit app
+st.title("Urban Navigator: Metro Site Predictor")
 
-st.write(
-    """
-    Explore population density, schools, hospitals, rent, traffic, and other metrics for Chandigarh's urban areas.
-    """
-)
+# Sidebar for dataset upload
+st.sidebar.header("Upload Your Dataset")
+uploaded_file = st.sidebar.file_uploader("Choose a CSV file", type="csv")
 
-# Load Excel dataset
-@st.cache_data
-def load_data():
-    file_path = "chandigarh_test.csv"  # Replace with your CSV file path
-    return pd.read_csv(file_path)
+if uploaded_file is not None:
+    try:
+        # Load the dataset
+        df = pd.read_csv(uploaded_file)
+        st.success("Dataset loaded successfully!")
 
-df = load_data()
+        # Display the column names in the dataset
+        st.write("### Available Columns in the Dataset")
+        st.write(df.columns.tolist())
 
-columns = st.multiselect(
-    "Select columns to view details:",
-    df.columns.tolist(),
-    ["name", "pop_den", "hospitals", "rent", "traffic", "city"],  # Default columns
-)
+        # Multi-select widget to select columns to display
+        st.write("### Select Columns to View Details:")
+        default_columns = ["name", "pop_den", "hospitals", "rent", "traffic", "city"]
+        valid_defaults = [col for col in default_columns if col in df.columns]
 
-# Filter the dataset to display only selected columns
-filtered_df = df[columns]
+        columns = st.multiselect(
+            "Select columns:",
+            options=df.columns.tolist(),
+            default=valid_defaults
+        )
 
-# Display the filtered table
-st.write("### Selected Area Details")
-st.dataframe(filtered_df)
+        # Display selected columns from the dataset
+        if columns:
+            st.write("### Selected Columns:")
+            st.dataframe(df[columns].head())
+        else:
+            st.warning("No columns selected. Please choose at least one column.")
 
-# Visualization section
-st.write("### Visualize Selected Data")
+    except Exception as e:
+        st.error(f"Error loading the dataset: {e}")
 
-# Allow the user to choose the X and Y axes
-x_axis = st.selectbox("Select X-axis column:", filtered_df.columns, index=0)
-y_axis = st.selectbox("Select Y-axis column:", filtered_df.columns, index=1)
+else:
+    st.info("Please upload a CSV file to proceed.")
 
-# Altair chart to display visualization
-chart = (
-    alt.Chart(filtered_df)
-    .mark_circle(size=80, color="steelblue")
-    .encode(
-        x=alt.X(x_axis, title=f"{x_axis}"),
-        y=alt.Y(y_axis, title=f"{y_axis}"),
-        tooltip=columns,  # Show tooltips for all selected columns
-    )
-    .interactive()
-)
+# Footer
+st.sidebar.markdown("---")
+st.sidebar.text("Urban Metro Site Predictor v1.0")
 
-# Render chart
-st.altair_chart(chart, use_container_width=True)
 
