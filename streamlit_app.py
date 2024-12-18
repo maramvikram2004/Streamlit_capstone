@@ -20,7 +20,6 @@ def load_data():
 
 df = load_data()
 
-# Multi-select widget to choose columns
 columns = st.multiselect(
     "Select columns to view details:",
     df.columns.tolist(),
