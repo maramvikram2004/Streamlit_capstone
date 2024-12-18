@@ -2,7 +2,14 @@ import streamlit as st
 import pandas as pd
 
 # Title of the Streamlit app
+st.set_page_config(page_title="Urban Metro Station Site Predictor", page_icon="🚇")
+
 st.title("Urban Navigator: Metro Site Predictor")
+st.write(
+    """
+    This application presents dynamic visualizations derived from meticulously crafted datasets developed by our group CG-176 (Harsha, Rahul, Swaroop, and Vikram) as part of our capstone project. The datasets underpin insights to showcase the depth and impact of our collaborative effort.
+    """
+)
 
 # Sidebar for dataset upload
 st.sidebar.header("Upload Your Dataset")
