@@ -32,7 +32,7 @@ if uploaded_file is not None:
         # Display selected columns from the dataset
         if columns:
             st.write("### Selected Columns:")
-            st.dataframe(df[columns].head())
+            st.dataframe(df[columns])
         else:
             st.warning("No columns selected. Please choose at least one column.")
 
